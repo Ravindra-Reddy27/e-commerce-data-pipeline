@@ -1,0 +1,38 @@
+# cloudbuild.yaml
+
+steps:
+  # Stage 1: Initialize Terraform
+  - name: 'hashicorp/terraform:1.5.0'
+    entrypoint: 'sh'
+    args:
+    - '-c'
+    - 'cd terraform && terraform init'
+
+  # Stage 2: Terraform Plan
+  - name: 'hashicorp/terraform:1.5.0'
+    entrypoint: 'sh'
+    args:
+    - '-c'
+    - 'cd terraform && terraform plan -var="gcp_project_id=$PROJECT_ID" -var="gcp_region=us-central1" -var="bigquery_dataset_id=events_dataset" -var="bigquery_staging_table_id=events_staging"'
+
+  # Stage 3: Terraform Apply
+  - name: 'hashicorp/terraform:1.5.0'
+    entrypoint: 'sh'
+    args:
+    - '-c'
+    - 'cd terraform && terraform apply -auto-approve -var="gcp_project_id=$PROJECT_ID" -var="gcp_region=us-central1" -var="bigquery_dataset_id=events_dataset" -var="bigquery_staging_table_id=events_staging"'
+
+  # Stage 4: Automate the DLQ
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      echo "Finding subscription..."
+      SUB_NAME=$(gcloud pubsub subscriptions list --filter="topic:events-topic" --format="value(name)" | grep "pubsub-to-bigquery-transformer")
+      echo "Attaching DLQ to $$SUB_NAME..."
+      gcloud pubsub subscriptions update $$SUB_NAME --dead-letter-topic=events-dlq --max-delivery-attempts=5
+
+timeout: '1200s'
+options:
+  logging: CLOUD_LOGGING_ONLY
