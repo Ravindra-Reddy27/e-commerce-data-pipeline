@@ -18,6 +18,7 @@ The pipeline consists of the following modular layers:
 
 5. **Monitoring:** A custom Cloud Monitoring dashboard tracks Pub/Sub message counts, Cloud Function errors, and BigQuery insertion rates.
 
+![Alt text](diagram/full-diagram.png)
 ---
 
 
@@ -35,8 +36,8 @@ This project utilizes a fully automated CI/CD pipeline. **Manual infrastructure 
  Before starting the setup, clone the project repository to your local machine.
 
  ```bash
- git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git
- cd YOUR_REPOSITORY_NAME
+ git clone https://github.com/Ravindra-Reddy27/e-commerce-data-pipeline.git
+ cd e-commerce-data-pipeline
  ```
 
 
@@ -217,7 +218,8 @@ To avoid incurring ongoing charges, destroy the infrastructure:
 
 ```bash
 cd terraform
-terraform destroy -auto-approve \
-  -var="gcp_project_id=YOUR_PROJECT_ID" \
-  -var="gcp_region=us-central1"
+terraform destroy -auto-approve -var="gcp_project_id=YOUR_PROJECT_ID" `
+-var="gcp_region=us-central1" `
+-var="bigquery_dataset_id=events_dataset" `
+-var="bigquery_staging_table_id=events_staging"
 ```
