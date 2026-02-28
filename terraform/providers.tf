@@ -10,7 +10,7 @@ terraform {
 # terraform/backend.tf
 terraform {
   backend "gcs" {
-    bucket = "${var.gcp_project_id}-tfstate"
+    bucket = "e-commerce-pipeline-488411-tfstate"
     prefix = "terraform/state"
   }
 }
