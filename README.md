@@ -19,7 +19,7 @@ The pipeline consists of the following modular layers:
 5. **Monitoring:** A custom Cloud Monitoring dashboard tracks Pub/Sub message counts, Cloud Function errors, and BigQuery insertion rates.
 
 ![Alt text](diagram/full-diagram.png)
----
+--- 
 
 
 ## 🚀 Deployment Instructions
