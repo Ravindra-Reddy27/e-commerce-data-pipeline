@@ -6,6 +6,7 @@
 resource "google_storage_bucket" "function_source_bucket" {
   name     = "${var.gcp_project_id}-function-source"
   location = var.gcp_region
+  uniform_bucket_level_access = true
 }
 
 # 2. Automatically zip the local Python code
